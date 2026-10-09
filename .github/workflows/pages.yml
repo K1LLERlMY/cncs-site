@@ -1,0 +1,42 @@
+name: Publish CNCS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout public deployment bundle
+        uses: actions/checkout@v6
+      - name: Verify and unpack website
+        run: |
+          sha256sum --check site.tar.gz.sha256
+          mkdir _site
+          tar -xzf site.tar.gz -C _site --no-same-owner
+          test -f _site/index.html
+          test -f _site/data/live.json
+          test -z "$(find _site -type l -print -quit)"
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
