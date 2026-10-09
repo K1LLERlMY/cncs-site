@@ -1,2 +1,19 @@
-# cncs-site
-CNCS — 中国 Counter-Strike 文化档案 · cncs.chat
+# CNCS — Beyond the Game
+
+中国 Counter-Strike 文化档案：从 CS 1.6 到 CS2，记录战队、赛事与共同记忆。
+
+本仓库只包含公开网站部署包。GitHub Actions 校验 `site.tar.gz.sha256`，解压 `site.tar.gz`，然后发布到 GitHub Pages。原始后台、数据库、管理接口和凭据不在本仓库中。
+
+## 赛事数据
+
+网站提供公开只读的 `data/live.json`，包含已核实的 HLTV 中国战队赛事存档及原核验时间。自动采集尚未启用；网页每 60 秒重新读取已发布 JSON，不代表后台在实时读取 HLTV。较旧数据会明确标注，重新发布不会重置核验时间。
+
+GitHub Pages 不运行 Node 服务或数据库。部署包不提供原服务器的 `/api/live` 或写入接口。
+
+## 更新网站
+
+从本地维护工程生成经过检查的公开静态目录，再替换本仓库的 `site.tar.gz` 和对应校验文件。提交到 `main` 后，Actions 会重新发布。必须同时更新包和校验文件，保持目录层级，不能将整个本地工程打包上传。
+
+自定义域名需要在 GitHub Pages 设置中绑定，并在 DNS 服务商配置；不要在包内放置账号资料或密钥。
+
+本站为独立粉丝项目，与 Valve、各战队及赛事主办方无隶属关系。图片、队标、视频的权利归各原权利人；网页保留素材来源。字体授权见网站包内 `assets/OFL.txt`。
